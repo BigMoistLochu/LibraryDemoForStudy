@@ -1,7 +1,4 @@
 package application.model;
 
-public class Book {
-    private Integer id;
-    private String title;
-    private String author;
-}
+
+public record Book(Integer id, String title,String author) { }
