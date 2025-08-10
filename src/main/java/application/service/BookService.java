@@ -1,26 +1,32 @@
 package application.service;
 
-import application.exceptions.BookNotFoundException;
+import application.database.BookRepository;
 import application.model.Book;
+import java.util.Objects;
+import java.util.Optional;
 
-import java.util.ArrayList;
-import java.util.List;
+public class BookService implements ServiceGeneric<Book> {
 
-public class BookService {
+    private final BookRepository bookRepository;
 
-    private final List<Book> books = new ArrayList<>();
-
-    public BookService(){}
-
-
-    public Book getBookById(Integer id){
-
-        if (id == null) throw new IllegalArgumentException("Book ID cannot be null");
-
-        return books.stream().filter(book -> book.id().equals(id))
-                .findFirst()
-                .orElseThrow(()-> new BookNotFoundException());
+    public BookService(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
     }
 
+    @Override
+    public void save(Book entity) {
 
+        Objects.requireNonNull(entity);
+        bookRepository.getBooks().add(entity);
+    }
+
+    @Override
+    public Optional<Book> getById(Integer id) {
+
+        Objects.requireNonNull(id,"Book ID cannot be null");
+
+        return bookRepository.getBooks().stream()
+                .filter(book -> book.id().equals(id))
+                .findFirst();
+    }
 }
